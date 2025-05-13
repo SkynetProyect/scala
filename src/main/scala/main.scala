@@ -52,7 +52,6 @@ val ventas: List[Venta] = List(
 def main(): Unit = {
 
 
-
   def filtrarMayores(lista: List[Venta], valor: Int): List[Vehiculo] = {
     lista.filter(_.vehiculo.precio >= valor).map(venta => venta.vehiculo).toList
 
@@ -61,12 +60,36 @@ def main(): Unit = {
   def totalVentas(ventas: List[Venta]): List[String] = {
     ventas.groupBy(_.vehiculo.marca).map { case (marca, ventasmarca) =>
       val total = ventasmarca.map(_.vehiculo.precio).sum
-      marca + ":" + total
+      marca + ": " + total
     }.toList
-
   }
 
+  def vehiculoMasCaroEnUltimoAño(ventas: List[Venta]): Vehiculo =
+    val añoMax = ventas.map(_.vehiculo.año).max
+    ventas
+      .filter(_.vehiculo.año == añoMax)
+      .map(_.vehiculo)
+      .reduce((venta1, venta2) => if venta1.precio >= venta2.precio then venta1 else venta2)
 
+  def ordenarPorAñoDesc(ventas: List[Venta]): List[Venta] =
+    ventas.sortBy(_.vehiculo.año).reverse
 
+  println("Vehiculos con precio mayor o igual a 30 mil (COP):")
+  filtrarMayores(ventas, 30000).foreach(venta =>
+    println(s"${venta.marca}, ${venta.modelo}: ${venta.precio}")
+  )
+
+  println("\nTotal de ventas por marca:")
+  totalVentas(ventas).foreach(println)
+
+  println("\nVehiculo mas caro vendido en el ultimo año vigente:")
+  val vehiculoMasCaro = vehiculoMasCaroEnUltimoAño(ventas)
+  println(s"${vehiculoMasCaro.marca} ${vehiculoMasCaro.modelo} (${vehiculoMasCaro.año}): ${vehiculoMasCaro.precio}")
+
+  println("\nVentas ordenadas por año (De mas recientes a mas antiguos):")
+  ordenarPorAñoDesc(ventas).foreach { venta =>
+    val vehiculo = venta.vehiculo
+    println(s"${vehiculo.año} - ${vehiculo.marca} ${vehiculo.modelo}: ${vehiculo.precio}")
   }
 
+}
