@@ -4,5 +4,6 @@ ThisBuild / scalaVersion := "3.3.6"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "vehicles"
+    name := "vehicles",
+    libraryDependencies += "com.typesafe.play" %% "play-json" % "2.10.6"
   )
